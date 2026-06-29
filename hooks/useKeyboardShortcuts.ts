@@ -2,17 +2,15 @@
 
 /**
  * 全局键盘快捷键：
- *   Space      — 开始 / 暂停
- *   R          — 重置当前模式
- *   1 / 2 / 3  — 切换到 Pomodoro / Short Break / Long Break
+ *   Space  — 开始 / 暂停
+ *   R      — 重置
  *
  * 当焦点在 input/textarea/select/contenteditable 内时禁用，避免干扰输入。
  */
 import { useEffect } from "react";
 import { useTimerStore } from "@/stores/timer.store";
 import { useSettingsStore } from "@/stores/settings.store";
-import { durationMsForMode } from "@/lib/timer/schedule";
-import type { TimerMode } from "@/types";
+import { focusDurationMs } from "@/lib/timer/schedule";
 
 function isFocusedOnInput(): boolean {
   const el = document.activeElement;
@@ -40,24 +38,13 @@ export function useKeyboardShortcuts() {
         if (timer.status === "running") {
           timer.pause(Date.now());
         } else {
-          timer.start(durationMsForMode(settings, timer.mode), Date.now());
+          timer.start(focusDurationMs(settings), Date.now());
         }
         return;
       }
 
       if (e.key === "r" || e.key === "R") {
-        timer.reset(durationMsForMode(settings, timer.mode));
-        return;
-      }
-
-      const modeMap: Record<string, TimerMode> = {
-        "1": "pomodoro",
-        "2": "shortBreak",
-        "3": "longBreak",
-      };
-      const targetMode = modeMap[e.key];
-      if (targetMode) {
-        timer.selectMode(targetMode, durationMsForMode(settings, targetMode));
+        timer.reset(focusDurationMs(settings));
       }
     }
 

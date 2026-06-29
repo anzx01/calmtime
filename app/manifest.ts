@@ -2,9 +2,9 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "CalmTime — Pomodoro Timer",
+    name: "CalmTime",
     short_name: "CalmTime",
-    description: "A calm Pomodoro timer with lo-fi radio and focus stats.",
+    description: "A calm, minimal focus timer.",
     start_url: "/",
     display: "standalone",
     background_color: "#ba4949",

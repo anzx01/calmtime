@@ -9,9 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "CalmTime — Pomodoro Timer with Lo-fi Radio",
-  description:
-    "A calm, beautiful Pomodoro timer to boost your focus. Custom durations, tasks, ambient lo-fi radio, focus stats, installable PWA.",
+  title: "CalmTime",
+  description: "A calm, minimal focus timer. Tap to start, tap to pause.",
   applicationName: "CalmTime",
   manifest: "/manifest.webmanifest",
   appleWebApp: {
