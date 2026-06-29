@@ -1,0 +1,176 @@
+@import "tailwindcss";
+
+/* ============================================================
+   CalmTime — 设计 token（Tailwind v4 CSS-first）
+   主题色为 CSS 变量，设置页可实时改色；背景渐变由主题色推导。
+   ============================================================ */
+@theme {
+  --font-sans:
+    var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+
+  /* 模式主题色（默认值，可被 :root 运行时覆盖） */
+  --color-pomodoro: #ba4949;
+  --color-short-break: #38858a;
+  --color-long-break: #397097;
+
+  /* 玻璃拟态 */
+  --radius-glass: 1.25rem;
+  --radius-pill: 9999px;
+  --shadow-glass: 0 8px 32px rgba(0, 0, 0, 0.18);
+  --shadow-raise: 0 6px 0 rgba(0, 0, 0, 0.16);
+  --blur-glass: 16px;
+}
+
+/* 运行时主题色（被设置 store 覆盖；默认同 @theme） */
+:root {
+  --color-pomodoro: #ba4949;
+  --color-short-break: #38858a;
+  --color-long-break: #397097;
+  --mode-color: var(--color-pomodoro);
+  color-scheme: light dark;
+}
+
+/* 每个模式推导出柔和渐变（color-mix 现代浏览器支持） */
+[data-mode="pomodoro"] {
+  --mode-color: var(--color-pomodoro);
+}
+[data-mode="short-break"] {
+  --mode-color: var(--color-short-break);
+}
+[data-mode="long-break"] {
+  --mode-color: var(--color-long-break);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: rgba(255, 255, 255, 0.95);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  /* 兜底背景，避免 AppBackground 加载前白闪 */
+  background-color: var(--mode-color);
+  overscroll-behavior: none;
+}
+
+/* 由主题色推导的渐变（供 AppBackground 各模式层使用） */
+.bg-grad-pomodoro {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-pomodoro) 82%, white 18%) 0%,
+    var(--color-pomodoro) 55%,
+    color-mix(in srgb, var(--color-pomodoro) 80%, black 20%) 100%
+  );
+}
+.bg-grad-short-break {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-short-break) 82%, white 18%) 0%,
+    var(--color-short-break) 55%,
+    color-mix(in srgb, var(--color-short-break) 80%, black 20%) 100%
+  );
+}
+.bg-grad-long-break {
+  background: linear-gradient(
+    160deg,
+    color-mix(in srgb, var(--color-long-break) 82%, white 18%) 0%,
+    var(--color-long-break) 55%,
+    color-mix(in srgb, var(--color-long-break) 80%, black 20%) 100%
+  );
+}
+
+/* 玻璃卡片 */
+.glass {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: var(--radius-glass);
+  box-shadow: var(--shadow-glass);
+  backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+  -webkit-backdrop-filter: blur(var(--blur-glass)) saturate(1.2);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+/* 低端设备/可访问性降级：减少透明度则用半透明纯色 */
+@media (prefers-reduced-transparency: reduce) {
+  .glass,
+  .glass-strong {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: color-mix(in srgb, var(--mode-color) 70%, black 30%);
+  }
+}
+
+/* 呼吸光晕（运行中的专注氛围） */
+@keyframes breathe {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: scale(1.08);
+    opacity: 0.8;
+  }
+}
+.animate-breathe {
+  animation: breathe 6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-breathe {
+    animation: none;
+  }
+  * {
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* 隐藏滚动条但可滚动（任务列表） */
+.scroll-soft {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+.scroll-soft::-webkit-scrollbar {
+  width: 6px;
+}
+.scroll-soft::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 9999px;
+}
+
+/* 数字等宽，计时跳动不抖 */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ── 强制浅色：body 叠加半透明白膜，玻璃卡片更亮 ── */
+[data-color-scheme="light"] body {
+  filter: brightness(1.1) saturate(0.9);
+}
+[data-color-scheme="light"] .glass {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+/* ── 强制深色：稍微压暗整体，玻璃更深 ── */
+[data-color-scheme="dark"] body {
+  filter: brightness(0.85) saturate(1.1);
+}
+[data-color-scheme="dark"] .glass {
+  background: rgba(0, 0, 0, 0.25);
+  border-color: rgba(255, 255, 255, 0.12);
+}

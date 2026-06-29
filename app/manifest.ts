@@ -1,0 +1,25 @@
+import type { MetadataRoute } from "next";
+
+export default function manifest(): MetadataRoute.Manifest {
+  return {
+    name: "CalmTime — Pomodoro Timer",
+    short_name: "CalmTime",
+    description: "A calm Pomodoro timer with lo-fi radio and focus stats.",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#ba4949",
+    theme_color: "#ba4949",
+    orientation: "portrait",
+    categories: ["productivity", "lifestyle"],
+    icons: [
+      { src: "/icons/icon-192.png", sizes: "192x192", type: "image/png", purpose: "any" },
+      { src: "/icons/icon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      {
+        src: "/icons/maskable-512.png",
+        sizes: "512x512",
+        type: "image/png",
+        purpose: "maskable",
+      },
+    ],
+  };
+}
