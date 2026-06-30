@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "CalmTime",
   description: "A calm, minimal focus timer. Tap to start, tap to pause.",
   applicationName: "CalmTime",
-  manifest: "/manifest.webmanifest",
+  manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
