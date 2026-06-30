@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import type { ReactNode, PointerEvent } from "react";
 import { cn } from "@/lib/utils/cn";
+import { playClick } from "@/lib/audio/alarm";
 
 interface ProgressRingProps {
   progress: number; // 0..1
@@ -66,12 +67,11 @@ export function ProgressRing({
   }
 
   function handleClick() {
-    // 发生过拖动则忽略点击
-    if (didDrag.current) {
-      didDrag.current = false;
-      return;
+    if (didDrag.current) return;
+    if (onClick) {
+      playClick();
+      onClick();
     }
-    onClick?.();
   }
 
   return (

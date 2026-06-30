@@ -69,6 +69,22 @@ function scheduleBeep(ac: AudioContext, preset: TonePreset, start: number, volum
   osc.stop(start + preset.beepDur + 0.03);
 }
 
+/** 按钮点击触觉反馈音：短促低沉的一声。 */
+export function playClick(): void {
+  const ac = getContext();
+  if (!ac) return;
+  const osc = ac.createOscillator();
+  const gain = ac.createGain();
+  osc.type = "sine";
+  osc.frequency.setValueAtTime(420, ac.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(200, ac.currentTime + 0.06);
+  gain.gain.setValueAtTime(0.18, ac.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ac.currentTime + 0.08);
+  osc.connect(gain).connect(ac.destination);
+  osc.start(ac.currentTime);
+  osc.stop(ac.currentTime + 0.09);
+}
+
 /** 播放提醒音：sound 音色、volume(0..1)、repeat 轮数。 */
 export function playAlarm(sound: SoundId, volume: number, repeat: number): void {
   if (sound === "none") return;
