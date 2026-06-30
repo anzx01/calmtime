@@ -51,7 +51,7 @@ export function ProgressRing({
   }
 
   function handlePointerMove(e: PointerEvent<HTMLDivElement>) {
-    if (!draggable || !e.buttons || !downPos.current) return;
+    if (!draggable || !downPos.current) return;
     const dx = e.clientX - downPos.current.x;
     const dy = e.clientY - downPos.current.y;
     if (!didDrag.current && Math.hypot(dx, dy) < 6) return;
@@ -99,7 +99,11 @@ export function ProgressRing({
         "active:scale-[0.95]",
         draggable ? "cursor-grab active:cursor-grabbing" : onClick && "cursor-pointer",
       )}
-      style={{ width: size, height: size }}
+      onPointerCancel={() => {
+        downPos.current = null;
+        didDrag.current = false;
+      }}
+      style={{ width: size, height: size, touchAction: draggable ? "none" : undefined }}
     >
       {/* 水晶球体 SVG：折射渐变 + 高光弧 + 进度环 */}
       <svg
