@@ -72,7 +72,8 @@ export const useTimerStore = create<TimerStore>()(
       }),
       merge: (persisted, current) => {
         const parsed = validated(timerStateSchema, persisted, INITIAL, "timer");
-        return { ...current, ...parsed };
+        // 页面加载时不恢复运行/暂停状态，始终从 idle 开始
+        return { ...current, ...parsed, status: "idle", endsAt: null, startedAt: null };
       },
     },
   ),

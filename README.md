@@ -1,45 +1,46 @@
 # CalmTime
 
-pomofocus.io 的复刻 + 增强版番茄钟。极简、精致（玻璃拟态）、手机/桌面自适应，内置在线 Lo-fi 电台、PWA 离线可装、本地专注统计。
+极简番茄钟。拖动进度环设置时长，点击启动/暂停。
 
 ## 技术栈
 
-Next.js 15.5（App Router）· React 19 · Tailwind CSS v4 · TypeScript（ESM）· Zustand v5 · serwist（PWA）· Recharts · 包管理 pnpm。
+Next.js 15.5（App Router）· React 19 · Tailwind CSS v4 · TypeScript · Zustand v5 · serwist（PWA）· 包管理 pnpm
 
 ## 快速开始
 
-所有 Run & Debug 一律走 `scripts/` 下的 `.sh` 脚本，日志输出到 `logs/`：
-
 ```bash
-bash scripts/dev.sh      # 开发服务器（Turbopack，http://localhost:3000）
-bash scripts/build.sh    # 生产构建（webpack + serwist，PWA 仅生产生效）
-bash scripts/start.sh    # 生产服务器（验证 PWA / 离线）
+bash scripts/dev.sh      # 开发服务器（http://localhost:3000）
+bash scripts/build.sh    # 生产构建（PWA 仅生产生效）
+bash scripts/start.sh    # 生产服务器
 bash scripts/stop.sh     # 停止占用端口的进程
 bash scripts/lint.sh     # tsc 类型检查 + ESLint
-bash scripts/format.sh   # Prettier 格式化
-bash scripts/clean.sh    # 清理 .next / 生成的 sw.js / 日志
-node scripts/gen-icons.mjs   # 重新生成 PWA PNG 图标（无依赖）
+bash scripts/clean.sh    # 清理 .next / 日志
 ```
-
-> PWA（Service Worker）在开发模式下禁用，必须 `build.sh` + `start.sh` 才能验证安装与离线。
 
 ## 功能
 
-- 三模式番茄钟（Pomodoro / Short Break / Long Break），背景随模式渐变过渡
+- **拖动设置时长**：idle 状态下拖动进度环，1–99 分钟，默认 25 分钟
 - **防漂移计时**：基于绝对时间戳，锁屏/切后台回来不丢秒
-- 任务管理：增删改、预估番茄、预估完成时间、当前任务高亮、任务模板
-- 设置：自定义时长、自动开始、长休息间隔、提醒音（Web Audio 合成）、音量、主题色
-- **在线 Lo-fi 电台**：YouTube 多频道，独立播放控制，不打断提醒音
-- **PWA**：可安装到桌面/手机、离线可用
-- **专注统计**：日/周/月图表、连续天数、CSV 导出（本地 localStorage）
+- **提醒音**：计时结束时 Web Audio 合成铃声，默认开启
+- **桌面通知**：计时结束时系统通知，默认开启（首次需授权）
+- **PWA**：可安装到桌面/手机，离线可用
+- **键盘快捷键**：空格键启动/暂停
 
-## 文档
+## 使用说明
 
-- 架构总览：[docs/architecture.md](docs/architecture.md)
-- 计时器设计：[docs/timer-design.md](docs/timer-design.md)
-- PWA 说明：[docs/pwa.md](docs/pwa.md)
-- 技术决策与后续路线：[discuss/tech-decisions.md](discuss/tech-decisions.md)
+| 操作 | 行为 |
+|------|------|
+| 拖动进度环（idle） | 调整时长（1–99 分钟） |
+| 点击进度环 | 启动 / 暂停 |
+| 空格键 | 启动 / 暂停 |
 
-## 后续阶段（尚未实现）
+## 静态导出部署
 
-Phase 3+ 的后端集成（账号、云同步、Todoist、Webhook）见技术决策文档。当前为 Phase 1：纯前端、零后端、可独立部署的 MVP。
+应用无任何服务端逻辑，支持静态导出：
+
+```ts
+// next.config.ts
+output: "export"
+```
+
+构建后将 `out/` 目录用 Nginx 托管即可。

@@ -1,5 +1,5 @@
 /** 持久化 schema 版本（迁移用）。 */
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 
 const PREFIX = `calmtime:v${SCHEMA_VERSION}`;
 

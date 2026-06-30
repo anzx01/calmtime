@@ -1,5 +1,4 @@
 import type { Settings } from "@/types";
-import { DEFAULT_THEME_COLORS } from "@/lib/theme/palette";
 import { SCHEMA_VERSION } from "./keys";
 
 export const DEFAULT_FOCUS_DURATION = 25;
@@ -12,9 +11,9 @@ export const DEFAULT_SETTINGS: Settings = {
     alarmRepeat: 2,
   },
   theme: {
-    pomodoroColor: DEFAULT_THEME_COLORS.pomodoro,
+    pomodoroColor: "#ba4949",
     colorScheme: "system",
   },
-  notifications: false,
+  notifications: true,
   schemaVersion: SCHEMA_VERSION,
 };

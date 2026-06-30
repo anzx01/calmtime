@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rm -rf .next)",
+      "Bash(npx tsc *)",
+      "Bash(timeout 15 node_modules/.bin/next dev --turbopack)",
+      "Bash(node_modules/.bin/next build *)"
+    ]
+  }
+}
