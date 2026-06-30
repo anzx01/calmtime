@@ -18,6 +18,8 @@ export const useSettingsStore = create<SettingsStore>()(
   persist(
     (set) => ({
       settings: DEFAULT_SETTINGS,
+      // update 仅用于顶层扁平字段（focusDuration、notifications 等）
+      // 嵌套对象请用 setSound / setTheme，避免浅合并丢失子字段
       update: (partial) => set((s) => ({ settings: { ...s.settings, ...partial } })),
       setSound: (partial) =>
         set((s) => ({

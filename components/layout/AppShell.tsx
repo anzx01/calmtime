@@ -1,12 +1,14 @@
 "use client";
 import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts";
 import { useAutoplayUnlock } from "@/hooks/useAutoplayUnlock";
+import { useTimeOfDay } from "@/hooks/useTimeOfDay";
 import { InstallPrompt } from "./InstallPrompt";
 import { TimerCard } from "@/components/timer/TimerCard";
 
 export function AppShell() {
   useKeyboardShortcuts();
   useAutoplayUnlock();
+  useTimeOfDay();
 
   return (
     <div className="min-h-dvh">

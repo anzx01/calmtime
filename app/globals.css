@@ -1,8 +1,5 @@
 @import "tailwindcss";
 
-/* ============================================================
-   CalmTime — 设计 token（Tailwind v4 CSS-first）
-   ============================================================ */
 @theme {
   --font-sans:
     var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica,
@@ -29,11 +26,16 @@ body {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  color: rgba(255, 255, 255, 0.95);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
-  background-color: #f2f2f7;
   overscroll-behavior: none;
+  background-color: #f2f2f7;
+}
+
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #1c1c1e;
+  }
 }
 
 /* offline 页背景渐变 */
@@ -76,10 +78,72 @@ body {
   font-feature-settings: "tnum";
 }
 
-/* 进度环颜色 */
-.ring-track {
-  stroke: rgba(0, 0, 0, 0.08);
+/* ══════════════════════════════════════════
+   浅色模式
+   ══════════════════════════════════════════ */
+.time-glow {
+  /* 雕刻效果：字体颜色更深，下方深阴影拉大 + 上方亮高光更强 */
+  color: rgba(15, 25, 55, 0.45);
+  text-shadow:
+    0 2px 2px rgba(255, 255, 255, 1),
+    0 3px 8px rgba(255, 255, 255, 0.75),
+    0 -1px 2px rgba(60, 80, 150, 0.55),
+    0 -2px 4px rgba(60, 80, 150, 0.25);
 }
+
+.ring-track {
+  stroke: rgba(150, 170, 210, 0.18);
+}
+
 .ring-progress {
-  stroke: var(--mode-color);
+  stroke: rgba(186, 73, 73, 0.9);
+  filter:
+    drop-shadow(0 0 3px rgba(186, 73, 73, 0.8))
+    drop-shadow(0 0 10px rgba(186, 73, 73, 0.35));
+}
+
+/* ══════════════════════════════════════════
+   深色模式
+   ══════════════════════════════════════════ */
+@media (prefers-color-scheme: dark) {
+  .time-glow {
+    color: rgba(180, 205, 255, 0.55);
+    text-shadow:
+      0 2px 2px rgba(0, 0, 0, 0.95),
+      0 3px 8px rgba(0, 0, 0, 0.7),
+      0 -1px 2px rgba(255, 255, 255, 0.4),
+      0 -2px 4px rgba(200, 220, 255, 0.2);
+  }
+
+  .ring-track {
+    stroke: rgba(255, 255, 255, 0.08);
+  }
+
+  .ring-progress {
+    stroke: rgba(255, 255, 255, 0.92);
+    filter:
+      drop-shadow(0 0 4px rgba(255, 255, 255, 1))
+      drop-shadow(0 0 14px rgba(180, 220, 255, 0.85))
+      drop-shadow(0 0 32px rgba(140, 200, 255, 0.45));
+  }
+}
+
+/* ══════════════════════════════════════════
+   夜间 20:00–07:00：暖黄护眼
+   ══════════════════════════════════════════ */
+html[data-night="true"] .time-glow {
+  color: rgba(200, 165, 100, 0.55);
+  text-shadow:
+    0 2px 2px rgba(0, 0, 0, 0.95),
+    0 3px 8px rgba(0, 0, 0, 0.7),
+    0 -1px 2px rgba(255, 240, 180, 0.45),
+    0 -2px 4px rgba(255, 220, 120, 0.2);
+}
+
+html[data-night="true"] .ring-progress {
+  stroke: rgba(255, 235, 190, 0.9);
+  filter:
+    drop-shadow(0 0 4px rgba(255, 240, 180, 1))
+    drop-shadow(0 0 14px rgba(255, 200, 100, 0.7))
+    drop-shadow(0 0 32px rgba(200, 140, 40, 0.35));
 }

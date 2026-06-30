@@ -62,6 +62,7 @@ export function ProgressRing({
     if (!draggable) return;
     (e.currentTarget as HTMLDivElement).releasePointerCapture(e.pointerId);
     downPos.current = null;
+    didDrag.current = false;
   }
 
   function handleClick() {
@@ -94,35 +95,80 @@ export function ProgressRing({
           : undefined
       }
       className={cn(
-        "relative grid place-items-center select-none",
+        "relative grid place-items-center select-none transition-transform duration-100 ease-out",
+        "active:scale-[0.95]",
         draggable ? "cursor-grab active:cursor-grabbing" : onClick && "cursor-pointer",
       )}
       style={{ width: size, height: size }}
     >
+      {/* 水晶球体 SVG：折射渐变 + 高光弧 + 进度环 */}
       <svg
         width={size}
         height={size}
-        className="-rotate-90"
-        style={{ position: "absolute", inset: 0, pointerEvents: "none" }}
+        style={{ position: "absolute", inset: 0, pointerEvents: "none", overflow: "visible" }}
       >
+        <defs>
+          {/* 球体体积感：左上亮、右下暗，模拟光线从左上方射入 */}
+          <radialGradient id="crystal-fill" cx="38%" cy="35%" r="65%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.38)" />
+            <stop offset="40%" stopColor="rgba(255,255,255,0.10)" />
+            <stop offset="100%" stopColor="rgba(180,200,230,0.18)" />
+          </radialGradient>
+          {/* 顶部高光弧：模拟玻璃球顶部折射亮斑 */}
+          <radialGradient id="crystal-highlight" cx="42%" cy="22%" r="40%">
+            <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
+            <stop offset="60%" stopColor="rgba(255,255,255,0.15)" />
+            <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+          </radialGradient>
+          {/* 底部内阴影：模拟玻璃厚度 */}
+          <radialGradient id="crystal-shadow" cx="50%" cy="85%" r="55%">
+            <stop offset="0%" stopColor="rgba(100,130,180,0.18)" />
+            <stop offset="100%" stopColor="rgba(100,130,180,0)" />
+          </radialGradient>
+        </defs>
+
+        {/* 球体底色 */}
+        <circle cx={size / 2} cy={size / 2} r={radius - stroke / 2 - 2} fill="url(#crystal-fill)" />
+        {/* 底部阴影层 */}
+        <circle cx={size / 2} cy={size / 2} r={radius - stroke / 2 - 2} fill="url(#crystal-shadow)" />
+        {/* 顶部折射高光 */}
+        <circle cx={size / 2} cy={size / 2} r={radius - stroke / 2 - 2} fill="url(#crystal-highlight)" />
+
+        {/* 进度环（旋转到从顶部开始） */}
+        <g transform={`rotate(-90 ${size / 2} ${size / 2})`}>
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            strokeWidth={stroke}
+            className="ring-track"
+          />
+          <circle
+            cx={size / 2}
+            cy={size / 2}
+            r={radius}
+            fill="none"
+            strokeWidth={stroke}
+            strokeLinecap="round"
+            strokeDasharray={circumference}
+            strokeDashoffset={offset}
+            className="ring-progress transition-[stroke-dashoffset] duration-300 ease-linear"
+          />
+        </g>
+
+        {/* 玻璃边缘高光：顶部弧线反光 */}
         <circle
           cx={size / 2}
           cy={size / 2}
-          r={radius}
+          r={radius - stroke / 2 - 2}
           fill="none"
-          strokeWidth={stroke}
-          className="ring-track"
-        />
-        <circle
-          cx={size / 2}
-          cy={size / 2}
-          r={radius}
-          fill="none"
-          strokeWidth={stroke}
+          strokeWidth={1.5}
+          stroke="rgba(255,255,255,0.55)"
+          strokeDasharray={`${(radius - stroke / 2 - 2) * Math.PI * 0.6} 9999`}
+          strokeDashoffset={-(radius - stroke / 2 - 2) * Math.PI * 0.55}
           strokeLinecap="round"
-          strokeDasharray={circumference}
-          strokeDashoffset={offset}
-          className="ring-progress transition-[stroke-dashoffset] duration-300 ease-linear"
+          transform={`rotate(-60 ${size / 2} ${size / 2})`}
         />
       </svg>
       <div className="relative z-10 flex flex-col items-center gap-1 pointer-events-none">
